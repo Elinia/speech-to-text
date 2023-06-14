@@ -2,7 +2,7 @@
 
 Minimal example of camera displaying and real-time speech to text in web app.
 
-[SvelteKit ](https://kit.svelte.dev/)+ [Web Speech API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Speech_API)
+[SvelteKit](https://kit.svelte.dev/) + [Web Speech API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Speech_API)
 
 ## Installing
 
@@ -14,4 +14,10 @@ pnpm install
 
 ```bash
 pnpm run dev
+```
+
+## Build
+
+```bash
+pnpm run build
 ```

@@ -27,7 +27,7 @@
 </script>
 
 <div class="w-screen h-screen bg-black">
-	<div class="m-2 flex items-center justify-between">
+	<div class="p-2 flex items-center justify-between">
 		<div class="flex items-center justify-start">
 			<MicToggle tracks={audioTracks} on:enabled={(e) => (micEnabled = e.detail.enabled)} />
 			<MicVolumeMeter tracks={audioTracks} />
