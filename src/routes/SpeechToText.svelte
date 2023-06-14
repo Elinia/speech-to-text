@@ -62,29 +62,31 @@
 	$: dispatch('text', { content: speechToTextContent });
 </script>
 
-<SettingsBtn on:click={() => menu.setOpen(true)} />
-<Menu bind:this={menu}>
-	<div class="mdc-deprecated-list">
-		<Item on:SMUI:action={() => (speechToTextEnabled = !speechToTextEnabled)}>
-			<Label>Speech To Text</Label>
-			<Meta>
-				<Checkbox checked={speechToTextEnabled} />
-			</Meta>
-		</Item>
-		<Separator />
-		<SelectionGroup>
-			{#each SUPPORTED_LANG as item}
-				<Item on:SMUI:action={() => (currentLang = item)} selected={currentLang === item}>
-					<SelectionGroupIcon>
-						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-							><title>check</title><path
-								d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"
-							/></svg
-						>
-					</SelectionGroupIcon>
-					<Text>{SUPPORTED_LANG_TEXT[item]}</Text>
-				</Item>
-			{/each}
-		</SelectionGroup>
-	</div>
-</Menu>
+<div class="w-12 h-12">
+	<SettingsBtn on:click={() => menu.setOpen(true)} />
+	<Menu bind:this={menu} class="top-1 right-1">
+		<div class="mdc-deprecated-list">
+			<Item on:SMUI:action={() => (speechToTextEnabled = !speechToTextEnabled)}>
+				<Label>Speech To Text</Label>
+				<Meta>
+					<Checkbox checked={speechToTextEnabled} />
+				</Meta>
+			</Item>
+			<Separator />
+			<SelectionGroup>
+				{#each SUPPORTED_LANG as item}
+					<Item on:SMUI:action={() => (currentLang = item)} selected={currentLang === item}>
+						<SelectionGroupIcon>
+							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+								><title>check</title><path
+									d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"
+								/></svg
+							>
+						</SelectionGroupIcon>
+						<Text>{SUPPORTED_LANG_TEXT[item]}</Text>
+					</Item>
+				{/each}
+			</SelectionGroup>
+		</div>
+	</Menu>
+</div>

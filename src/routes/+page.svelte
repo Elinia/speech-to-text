@@ -27,15 +27,15 @@
 </script>
 
 <div class="w-screen h-screen bg-black">
-	<!-- svelte-ignore a11y-media-has-caption -->
-	<video bind:this={video} class="absolute w-full top-16" />
-	<div class="absolute top-4 left-4 h-12 flex items-center justify-items-start gap-1">
-		<MicToggle tracks={audioTracks} on:enabled={(e) => (micEnabled = e.detail.enabled)} />
-		<MicVolumeMeter tracks={audioTracks} />
-	</div>
-	<div class="absolute top-4 right-4 w-12 h-12">
+	<div class="m-2 flex items-center justify-between">
+		<div class="flex items-center justify-start">
+			<MicToggle tracks={audioTracks} on:enabled={(e) => (micEnabled = e.detail.enabled)} />
+			<MicVolumeMeter tracks={audioTracks} />
+		</div>
 		<SpeechToText enabled={micEnabled} on:text={(e) => (speechToTextContent = e.detail.content)} />
 	</div>
+	<!-- svelte-ignore a11y-media-has-caption -->
+	<video bind:this={video} class="absolute w-full top-16" />
 	{#if micEnabled}
 		<p class="text-content">{speechToTextContent}</p>
 	{/if}
