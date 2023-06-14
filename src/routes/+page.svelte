@@ -1,72 +1,56 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import MicToggle from './MicToggle.svelte';
+	import MicVolumeMeter from './MicVolumeMeter.svelte';
+	import SpeechToText from './SpeechToText.svelte';
 
 	let video: HTMLVideoElement;
-	let subtitle = '';
+
+	let micEnabled = true;
+	let audioTracks: MediaStreamTrack[] = [];
 	onMount(() => {
 		navigator.mediaDevices
-			.getUserMedia({
-				video: {
-					width: 1280,
-					height: 720
-				}
-			})
+			.getUserMedia({ video: true })
 			.then((stream) => {
 				const videoStream = new MediaStream(stream.getVideoTracks());
 				video.srcObject = videoStream;
 				video.onloadedmetadata = (e) => video.play();
 			})
 			.catch((e) => console.error(e.name + ': ' + e.message));
-
-		const recognition = new window.webkitSpeechRecognition();
-		recognition.lang = 'zh-cmn-Hans';
-		recognition.continuous = true;
-		recognition.interimResults = true;
-		recognition.onresult = (e) => {
-			const last = e.results[e.results.length - 1];
-			// if (last.isFinal) {
-			subtitle = last[0].transcript;
-			// }
-			// console.log(e.results);
-		};
-		recognition.onend = () => {
-			// console.log('end');
-		};
-		recognition.onerror = (e) => {
-			console.error(e);
-		};
-		recognition.start();
+		navigator.mediaDevices
+			.getUserMedia({ audio: true })
+			.then((stream) => (audioTracks = stream.getAudioTracks()))
+			.catch((e) => console.error(e.name + ': ' + e.message));
 	});
+
+	let speechToTextContent = '';
 </script>
 
-<div class="video-container">
+<div class="w-screen h-screen bg-black">
 	<!-- svelte-ignore a11y-media-has-caption -->
-	<video bind:this={video} />
-	<p class="subtitle">{subtitle}</p>
+	<video bind:this={video} class="absolute w-full top-16" />
+	<div class="absolute top-4 left-4 h-12 flex items-center justify-items-start gap-1">
+		<MicToggle tracks={audioTracks} on:enabled={(e) => (micEnabled = e.detail.enabled)} />
+		<MicVolumeMeter tracks={audioTracks} />
+	</div>
+	<div class="absolute top-4 right-4 w-12 h-12">
+		<SpeechToText enabled={micEnabled} on:text={(e) => (speechToTextContent = e.detail.content)} />
+	</div>
+	{#if micEnabled}
+		<p class="text-content">{speechToTextContent}</p>
+	{/if}
 </div>
 
-<style>
-	.video-container {
-		width: 1280px;
-		height: 720px;
-		display: grid;
+<style lang="postcss">
+	video {
+		max-height: calc(100% - 48px - 2rem);
 	}
 
-	.video-container > * {
-		grid-area: 1 / 1;
-	}
+	.text-content {
+		@apply w-full absolute bottom-0 px-4 mb-4 text-center;
 
-	.video-container > .subtitle {
 		font-family: 'Arial', 'Microsoft YaHei', '黑体', '宋体', sans-serif;
-		font-size: 50px;
-		font-weight: 700;
-		-webkit-text-fill-color: white;
-		-webkit-text-stroke: 2px black;
-
-		padding: 0 2em;
-		display: flex;
-		align-items: end;
-		justify-content: center;
-		flex-wrap: wrap;
+		font-size: 2em;
+		font-weight: 500;
 	}
 </style>
